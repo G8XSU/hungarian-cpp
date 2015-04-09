@@ -39,7 +39,7 @@ Hungarian::Hungarian()
 Hungarian::Hungarian(const vector<vector<int>>& input_matrix, int rows, int cols, MODE mode)
 {
   int i,j, org_cols, org_rows;
-  int max_cost;
+  //int max_cost;
   max_cost = 0;
   
   org_cols = cols;
@@ -77,17 +77,20 @@ Hungarian::Hungarian(const vector<vector<int>>& input_matrix, int rows, int cols
 
   if (mode == HUNGARIAN_MODE_MAXIMIZE_UTIL) 
   {
-	  for(i=0; i<m_rows; i++) 
+	  
+  modeInt = HUNGARIAN_MODE_MAXIMIZE_UTIL;
+	for(i=0; i<m_rows; i++) 
 	  {
 		  for(j=0; j<m_cols; j++) 
 		  {
-			  m_costmatrix[i][j] =  max_cost - m_costmatrix[i][j];
+		  m_costmatrix[i][j] = (-1) * m_costmatrix[i][j] + max_cost;  //max_cost - m_costmatrix[i][j];
 		  }
 	  }
   }
-  else if (mode == HUNGARIAN_MODE_MINIMIZE_COST) 
+  else if (mode == HUNGARIAN_MODE_MINIMIZE_COST)
   {
-    // nothing to do
+    // nothing to do 
+  modeInt = HUNGARIAN_MODE_MINIMIZE_COST;
   }
   else 
     fprintf(stderr,"%s: unknown mode. Mode was set to HUNGARIAN_MODE_MINIMIZE_COST !\n", __FUNCTION__);
@@ -115,7 +118,21 @@ void Hungarian::print_assignment() {
 }
 
 void Hungarian::print_cost() {
-  hungarian_print_matrix(m_costmatrix, m_rows, m_cols) ;
+	if (modeInt == HUNGARIAN_MODE_MINIMIZE_COST)
+		hungarian_print_matrix(m_costmatrix, m_rows, m_cols);
+	else{
+		vector<vector<int> > m_costmatrix_org(m_costmatrix);
+		for (int i = 0; i<m_rows; i++)
+			{
+			for (int j = 0; j<m_cols; j++)
+				{
+				m_costmatrix_org[i][j] = (-1) *(m_costmatrix_org[i][j] - max_cost);  //max_cost - m_costmatrix[i][j];
+				}
+			}
+		hungarian_print_matrix(m_costmatrix_org, m_rows, m_cols);
+
+		}
+
 }
 
 void Hungarian::print_status() 

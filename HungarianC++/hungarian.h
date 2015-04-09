@@ -53,7 +53,7 @@ public:
 	int init(const vector<vector<int>>& input_matrix, 
 			   int rows, 
 			   int cols, 
-			   MODE mode);
+			   MODE mode); 
 
 	/** This method computes the optimal assignment. **/
 	bool solve();
@@ -82,6 +82,8 @@ private:
 	int m_cost;
 	int m_rows;
 	int m_cols;
+	int max_cost;
+	MODE modeInt; // 0 for min  // 1 for maxi 
 	vector<vector<int>> m_costmatrix;
 	vector<vector<int>> m_assignment;   
 
